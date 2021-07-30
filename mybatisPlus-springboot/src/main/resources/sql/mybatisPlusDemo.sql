@@ -29,10 +29,6 @@ CREATE TABLE `CollarLeash` (
 
 /*Data for the table `CollarLeash` */
 
-insert  into `CollarLeash`(`id`,`cid`,`lid`) values 
-('2c8f2374c5c74f0c8842ac898b743c42','7a666a9647f542c48bf20e3c30ae9ac4','65a89f4db9304efc9bee994cf6cd1b4d'),
-('a8e8104accc34a51ab9f89eabd28ecd0','461e7fbc106946cbb4c153010752de30','65a89f4db9304efc9bee994cf6cd1b4d'),
-('b1937b2049bc437b858b1192d1ebee11','7a666a9647f542c48bf20e3c30ae9ac4','9bb093075eab4ae781b6801d0f8ab2e1');
 
 /*Table structure for table `DogCollar` */
 

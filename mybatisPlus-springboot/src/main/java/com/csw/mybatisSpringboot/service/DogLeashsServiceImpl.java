@@ -23,18 +23,23 @@ public class DogLeashsServiceImpl implements DogLeashService {
     }
 
     @Override
-    public List selectDogLeashDogs() {
+    public List<DogLeash> selectDogLeashDogs() {
         return dogLeashesMapper.selectList();
     }
 
     @Override
-    public Map selectOneToOneByMybatisPlusPage(int currentPage, int pageSize) {
+    public Map<String, Object> selectOneToOneByMybatisPlusPage(int currentPage, int pageSize) {
         Page<Dog> page0 = new Page<>(currentPage, pageSize);
-        Page pagelist = dogLeashesMapper.selectOneToOneByMybatisPlusPage(page0);
-        Map map = new HashMap();
+        Page<DogLeash> pagelist = dogLeashesMapper.selectOneToOneByMybatisPlusPage(page0);
+        Map<String, Object> map = new HashMap<>();
         map.put("records", pagelist.getRecords());//数据
         map.put("status", "success");
         return map;
+    }
+
+    @Override
+    public void insertDogLeashForeach(List<DogLeash> list) {
+        dogLeashesMapper.insertDogLeashForeach(list);
     }
 
 

@@ -27,5 +27,12 @@
                  left join DogLeash dl on d.id = dl.dogId
 
     </select>
+    <insert id="insertDogLeashForeach">
+        insert into DogLeash (id,color,variety,dogId)values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.color},#{item.variety},#{item.dogId})
+        </foreach>
+    </insert>
+
 
 </mapper>

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,6 +43,65 @@ public class TestDog {
     }
 
     @Test
+    public void insertDogForeach() {//批量插入用foreach标签，效率比for循环和mybatisPlus的insertBatch效率要高
+        List<Dog> list = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            Dog dog = new Dog();
+            dog.setName("小明" + i);
+            dog.setAge(i);
+            dog.setId(UUID.randomUUID().toString().replace("-", ""));
+            list.add(dog);
+        }
+        if (list.size() > 0) {
+            dogService.insertDogForeach(list);
+        }
+
+    }
+
+    @Test/*批量插入狗链*/
+    public void insertDogLeashForeach() {//批量插入用foreach标签，效率比for循环和mybatisPlus的insertBatch效率要高
+        List<Dog> dogList = dogService.selectAllDog();
+        List<DogLeash> list = new ArrayList<>();
+        for (int i = 0; i < dogList.size(); i++) {
+            String dogId = dogList.get(i).getId();
+            DogLeash dogLeash = new DogLeash();
+            dogLeash.setDogId(dogId);
+            dogLeash.setId(UUID.randomUUID().toString().replace("-", ""));
+            dogLeash.setColor("银白色" + i);
+            dogLeash.setVariety("莫高窟" + i);
+            list.add(dogLeash);
+        }
+        if (list.size() > 0) {
+            dogLeashService.insertDogLeashForeach(list);
+        }
+
+    }
+
+    @Test
+    public void updateDogForeach() {//批量更新用foreach标签，效率比for循环和mybatisPlusinsertBatch效率要高
+        List<Dog> dogList = dogService.selectAllDog();
+        List<Dog> dogs = new ArrayList<>();
+        for (Object o : dogList) {
+            Dog dog = (Dog) o;
+            dog.setName("小明" + (0));
+            dog.setAge(17);
+            dogs.add(dog);
+        }
+        if (dogs.size() > 0) {
+            dogService.updateDogForeach(dogs);
+        }
+    }
+
+    @Test
+    public void deleteDogForeach() {//批量更删除用foreach标签，效率比for循环和mybatisPlus的insertBatch效率要高
+        List<Dog> list = dogService.selectAllDog();
+        String string = "小";
+        if (list.size() > 0) {
+            dogService.deleteDogForeach(list, string);
+        }
+    }
+
+    @Test
     public void updateDog() {//更新狗mybatis-plus
         Dog dog = dogService.selectDogById("7f2195eb0fe1403ab33eec0cf5abb197");
         dog.setName("小绿2");
@@ -55,12 +115,13 @@ public class TestDog {
 
     @Test
     public void selectAllDog() {//查询所有狗mybatis-plus
-        List dogList = dogService.selectAllDog();
+        List<Dog> dogList = dogService.selectAllDog();
+        System.out.println(dogList);
     }
 
     @Test
     public void insertDogLeash() {//添加狗链mybatis-plus
-        String dogId = "eb027aa4e1434c368e2385003880eb2a";
+        String dogId = "939ef4945f1b43d9ad986b4843b2c416";
         DogLeash dogLeash = new DogLeash();
         dogLeash.setDogId(dogId);
         dogLeash.setId(UUID.randomUUID().toString().replace("-", ""));
@@ -71,7 +132,8 @@ public class TestDog {
 
     @Test
     public void selectDogLeashDogs() {
-        List dogList = dogLeashService.selectDogLeashDogs();
+        List<DogLeash> dogList = dogLeashService.selectDogLeashDogs();
+        System.out.println(dogList);
     }
 
     /*eq	=	eq(“real_name”,“王昭君”)
@@ -109,10 +171,10 @@ public class TestDog {
         int currentPage = 1;//1,0,都是第一页
         int pageSize = 3;
         Page<Dog> page = new Page<>(currentPage, pageSize);
-        page.setDesc("name");
+        // page.setDesc("name");
         QueryWrapper<Dog> queryWrapper = new QueryWrapper<>();
-        Map map = dogService.selectPage(page, queryWrapper);
-        for (Object obj : map.keySet()) {
+        Map<String, Object> map = dogService.selectPage(page, queryWrapper);
+        for (String obj : map.keySet()) {
             System.out.println("键：" + obj);
             System.out.println("键" + map.get(obj));
         }
@@ -120,19 +182,23 @@ public class TestDog {
 
     @Test
     public void selectTables() {//多表查询(一对多)（需要手动写sql）
-        Map map = dogService.selectTables();
-        for (Object obj : map.keySet()) {
+        Map<String, Object> map = dogService.selectTables();
+        for (String obj : map.keySet()) {
             System.out.println("键：" + obj);
             System.out.println("键" + map.get(obj));
         }
     }
 
     @Test/*反例*//*可以正常查询封装，每页的条数不对*/
-    public void selectpageTables() {//多表查询分页（一对多）（需要手动写sql，先分页查询再封装（适合一对一联表））
+    public void selectPageTables() {//多表查询分页（一对多）（需要手动写sql，先分页查询再封装（适合一对一联表））
         /*用limit分页，首页从0开始*/
         int currentPage = 0;
         int pageSize = 3;
-        Map map = dogService.selectpageTables(currentPage, pageSize);
+        Map<String, Object> map = dogService.selectpageTables(currentPage, pageSize);
+        for (String obj : map.keySet()) {
+            System.out.println("键：" + obj);
+            System.out.println("键" + map.get(obj));
+        }
     }
 
     @Test/*反例*//*可以正常查询封装，每页的条数不对*/
@@ -142,6 +208,7 @@ public class TestDog {
         int pageSize = 2;
         Page<Dog> page0 = new Page<>(currentPage, pageSize);
         Page<Dog> dogPage = dogService.selectTablePage(page0);
+        System.out.println(dogPage.getRecords());
     }
 
     /*真正的一对多分页，后续的*/
@@ -149,9 +216,9 @@ public class TestDog {
     public void selectTablesByLast() {//多表查询(一对多)（需要手动写sql,需要先查询出所有结果并且后续分装）
         /*第一页从1开始算*/
         int currentPage = 1;
-        int pageSize = 1;
-        Map map = dogService.selectTablesByLast(currentPage, pageSize);
-        for (Object obj : map.keySet()) {
+        int pageSize = 3;
+        Map<String, Object> map = dogService.selectTablesByLast(currentPage, pageSize);
+        for (String obj : map.keySet()) {
             System.out.println("键：" + obj);
             System.out.println("键" + map.get(obj));
         }
@@ -162,8 +229,8 @@ public class TestDog {
         /*第一页从1开始算*/
         int currentPage = 1;
         int pageSize = 3;
-        Map map = dogLeashService.selectOneToOneByMybatisPlusPage(currentPage, pageSize);
-        for (Object obj : map.keySet()) {
+        Map<String, Object> map = dogLeashService.selectOneToOneByMybatisPlusPage(currentPage, pageSize);
+        for (String obj : map.keySet()) {
             System.out.println("键：" + obj);
             System.out.println("键" + map.get(obj));
         }
@@ -177,13 +244,13 @@ public class TestDog {
     }
 
     /*真正的多对多分页，后续的*/
-    @Test
+    @Test/*一个狗圈多个狗链*/
     public void selectCollarLeashByLast() {//多表查询(多对多)（需要手动写sql,需要先查询出所有结果并且后续分装）
         /*第一页从1开始算*/
         int currentPage = 1;
         int pageSize = 1;
-        Map map = dogCollarService.selectCollarLeashByLast(currentPage, pageSize);
-        for (Object obj : map.keySet()) {
+        Map<String, Object> map = dogCollarService.selectCollarLeashByLast(currentPage, pageSize);
+        for (String obj : map.keySet()) {
             System.out.println("键：" + obj);
             System.out.println("键" + map.get(obj));
         }

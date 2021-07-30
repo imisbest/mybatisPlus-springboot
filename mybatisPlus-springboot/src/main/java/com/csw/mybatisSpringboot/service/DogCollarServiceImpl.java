@@ -1,5 +1,6 @@
 package com.csw.mybatisSpringboot.service;
 
+import com.csw.mybatisSpringboot.entity.DogCollar;
 import com.csw.mybatisSpringboot.mapper.DogCollarMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,19 +16,19 @@ public class DogCollarServiceImpl implements DogCollarService {
     private DogCollarMapper dogCollarMapper;
 
     @Override
-    public Map selectCollarLeashByLast(int currentPage, int pageSize) {
+    public Map<String, Object> selectCollarLeashByLast(int currentPage, int pageSize) {
         /*
          * currentPage 1, pageSize 3
          * 第一页 1-3
          * currentPage 2, pageSize 3
          * 第二页 4-6
          * */
-        List list = dogCollarMapper.selectCollarLeashByLast();
+        List<DogCollar> list = dogCollarMapper.selectCollarLeashByLast();
         int length = list.size();
-        List returnList = new ArrayList();
+        List<DogCollar> returnList = new ArrayList<>();
         int start = (currentPage - 1) * pageSize + 1;
         int end = currentPage * pageSize;
-        Map map0 = new HashMap();
+        Map<String, Object> map0 = new HashMap<>();
         for (int i = start - 1; i < end; i++) {
             if (i + 1 <= length) {
                 returnList.add(list.get(i));

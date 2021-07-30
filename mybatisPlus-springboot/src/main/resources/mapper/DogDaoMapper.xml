@@ -56,6 +56,43 @@
                  left join DogLeash dl on d.id = dl.dogId
 
     </select>
+    <insert id="insertDogForeach">
+        insert into dog (id,name,age)values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.age})
+        </foreach>
+    </insert>
+    <update id="updateDogForeach">
+        update dog
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.name !=null">
+                        when id=#{item.id} then #{item.name}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="age =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.age != -1">
+                        when id=#{item.id} then #{item.age}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
 
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
 
+    </update>
+    <delete id="deleteDogForeach">
+        delete from dog
+        where name like concat('%',#{string},'%')
+        and id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </delete>
 </mapper>

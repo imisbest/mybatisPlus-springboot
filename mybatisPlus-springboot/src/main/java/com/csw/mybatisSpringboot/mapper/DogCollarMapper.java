@@ -6,5 +6,5 @@ import com.csw.mybatisSpringboot.entity.DogCollar;
 import java.util.List;
 
 public interface DogCollarMapper extends BaseMapper<DogCollar> {
-    List selectCollarLeashByLast();
+    List<DogCollar> selectCollarLeashByLast();
 }

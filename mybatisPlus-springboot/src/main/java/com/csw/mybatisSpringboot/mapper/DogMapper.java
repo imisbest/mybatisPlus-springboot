@@ -1,21 +1,29 @@
 package com.csw.mybatisSpringboot.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.csw.mybatisSpringboot.entity.Dog;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 
 public interface DogMapper extends BaseMapper<Dog> {
 
-    List selectList();/*mybatis-plus*/
+    List<Dog> selectList();/*mybatis-plus*/
 
-    List selectpageTables( int currentPage,int pageSize);
+    List<Dog> selectpageTables(int currentPage, int pageSize);
 
-    List selectTables();
+    List<Dog> selectTables();
 
     Page<Dog> selectTablePage(Page<Dog> page0);
 
+    /*foreach批量插入*/
+    void insertDogForeach(@Param("list") List<Dog> list);
+
+    /*foreach批量更新*/
+    void updateDogForeach(List<Dog> list);
+
+    /*foreach批量删除*/
+    void deleteDogForeach(List<Dog> list, String string);
 }
