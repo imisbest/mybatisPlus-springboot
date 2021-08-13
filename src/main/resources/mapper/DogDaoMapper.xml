@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.csw.mybatisSpringboot.mapper.DogMapper">
+
+    <resultMap type="Dog" id="DogS"><!--一对多链表查询--><!--一条狗对应多个狗链-->
+        <!--一条狗对应多条狗链-->
+        <!--column是查询出来的数据库别名，property是实体名字-->
+        <!--type和ofType里面都是实体属性
+        resultMap的type实体里面有collection的property的字段集合
+        如@TableField(exist = false)
+        private List<DogLeash> DogLeashLists;
+        collection对应ofType-->
+        <id column="did" property="id"/>
+        <result column="dname" property="name"/>
+        <result column="dage" property="age"/>
+        <!--<result column="acount" property="dogId"/>--><!--不需要的条件可以不查-->
+        <collection property="dogLeashLists" ofType="DogLeash">
+            <id column="dlId" property="id"/>
+            <result column="dlColor" property="color"/>
+            <result column="dlVariety" property="variety"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectTables" resultMap="DogS">
+        select d.id       as did,
+               d.name     as dname,
+               d.age      as dage,
+               dl.id      as dlId,
+               dl.color   as dlColor,
+               dl.variety as dlVariety
+        from dog d
+                 left join DogLeash dl on d.id = dl.dogId
+
+    </select>
+    <select id="selectpageTables" resultMap="DogS">
+        select d.id       as did,
+               d.name     as dname,
+               d.age      as dage,
+               dl.id      as dlId,
+               dl.color   as dlColor,
+               dl.variety as dlVariety
+        from dog d
+                 left join DogLeash dl on d.id = dl.dogId
+            limit #{param1}
+           , #{param2}
+    </select>
+    <select id="selectTablePage" resultMap="DogS">
+        select d.id       as did,
+               d.name     as dname,
+               d.age      as dage,
+               dl.id      as dlId,
+               dl.color   as dlColor,
+               dl.variety as dlVariety
+        from dog d
+                 left join DogLeash dl on d.id = dl.dogId
+
+    </select>
+    <select id="selectList" resultType="com.csw.mybatisSpringboot.entity.Dog">
+        select *
+        from dog
+    </select>
+    <insert id="insertDogForeach">
+        insert into dog (id,name,age)values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.age})
+        </foreach>
+    </insert>
+    <update id="updateDogForeach">
+        update dog
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="name =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.name !=null">
+                        when id=#{item.id} then #{item.name}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="age =case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.age != -1">
+                        when id=#{item.id} then #{item.age}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+
+        where id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+    <!--<update id="updateCommit">
+        update user u
+        set u.commit =
+                case
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &gt; DATE_FORMAT(u.create_time, '%Y-%m-%d %T') and
+                         DATE_FORMAT(now(), '%Y-%m-%d %T') &lt; DATE_FORMAT(u.end_time, '%Y-%m-%d %T')
+                        then '进行中'
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &gt; DATE_FORMAT(u.end_time, '%Y-%m-%d %T')
+                        then '已经结束'
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &lt; DATE_FORMAT(u.create_time, '%Y-%m-%d %T')
+                        then '还未开始'
+                    end,
+            u.aaa    =
+                case
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &gt; DATE_FORMAT(u.create_time, '%Y-%m-%d %T') and
+                         DATE_FORMAT(now(), '%Y-%m-%d %T') &lt; DATE_FORMAT(u.end_time, '%Y-%m-%d %T')
+                        then '0'
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &gt; DATE_FORMAT(u.end_time, '%Y-%m-%d %T')
+                        then '1'
+                    when DATE_FORMAT(now(), '%Y-%m-%d %T') &lt; DATE_FORMAT(u.create_time, '%Y-%m-%d %T')
+                        then '2'
+                    end
+
+
+    </update>-->
+    <delete id="deleteDogForeach">
+        delete from dog
+        where name like concat('%',#{string},'%')
+        and id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </delete>
+</mapper>

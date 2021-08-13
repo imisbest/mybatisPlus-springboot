@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.csw.mybatisSpringboot.mapper.DogCollarMapper">
+
+    <resultMap type="DogCollar" id="DogCollarS"><!--一对多链表查询--><!--一条狗对应多个狗链-->
+        <!--一条狗对应多条狗链-->
+        <!--column是查询出来的数据库别名，property是实体名字-->
+        <!--type和ofType里面都是实体属性
+        resultMap的type实体里面有collection的property的字段集合
+        如@TableField(exist = false)
+        private List<DogLeash> DogLeashLists;
+        collection对应ofType-->
+        <id column="dcid" property="id"/>
+        <result column="dcmodle" property="model"/>
+        <!--<result column="acount" property="dogId"/>--><!--不需要的条件可以不查-->
+        <collection property="dogLeashLists" ofType="DogLeash">
+            <id column="dlId" property="id"/>
+            <result column="dlColor" property="color"/>
+            <result column="dlVariety" property="variety"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectCollarLeashByLast" resultMap="DogCollarS">
+        select dc.id      as dcid,
+               dc.modle   as dcmodle,
+               dl.id      as dlId,
+               dl.color   as dlColor,
+               dl.variety as dlVariety,
+               cl.id      as clid
+        from DogCollar dc,
+             DogLeash dl,
+             CollarLeash cl
+        where cl.cid = dc.id
+          and cl.lid = dl.id
+    </select>
+
+
+</mapper>
