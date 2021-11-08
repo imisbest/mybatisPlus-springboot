@@ -21,7 +21,6 @@
         </collection>
     </resultMap>
 
-
     <select id="selectTables" resultMap="DogS">
         select d.id       as did,
                d.name     as dname,
@@ -31,8 +30,8 @@
                dl.variety as dlVariety
         from dog d
                  left join DogLeash dl on d.id = dl.dogId
-
     </select>
+
     <select id="selectpageTables" resultMap="DogS">
         select d.id       as did,
                d.name     as dname,
@@ -45,6 +44,7 @@
             limit #{param1}
            , #{param2}
     </select>
+
     <select id="selectTablePage" resultMap="DogS">
         select d.id       as did,
                d.name     as dname,
@@ -54,18 +54,20 @@
                dl.variety as dlVariety
         from dog d
                  left join DogLeash dl on d.id = dl.dogId
-
     </select>
+
     <select id="selectList" resultType="com.csw.mybatisSpringboot.entity.Dog">
         select *
         from dog
     </select>
+
     <insert id="insertDogForeach">
         insert into dog (id,name,age)values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.id},#{item.name},#{item.age})
         </foreach>
     </insert>
+
     <update id="updateDogForeach">
         update dog
         <trim prefix="set" suffixOverrides=",">
@@ -84,12 +86,22 @@
                 </foreach>
             </trim>
         </trim>
-
         where id in
         <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
             #{item.id}
         </foreach>
     </update>
+
+    <!-- <update id="updateUserById" parameterType="com.example.demo.entity.UserEntity">UPDATE user
+         <trim prefix="set" suffixOverrides=",">
+             <if test="userName != null">userName = #{userName},</if>
+             <if test="UpdateTime != null">UpdateTime = #{UpdateTime },</if>
+             <if test="userPassword != null">userPassword = #{password},</if>
+             <if test="status != null">status = #{status},</if>
+         </trim>
+         WHERE id = #{id,jdbcType=VARCHAR}
+     </update>-->
+
     <!--<update id="updateCommit">
         update user u
         set u.commit =
@@ -112,9 +124,8 @@
                     when DATE_FORMAT(now(), '%Y-%m-%d %T') &lt; DATE_FORMAT(u.create_time, '%Y-%m-%d %T')
                         then '2'
                     end
-
-
     </update>-->
+
     <delete id="deleteDogForeach">
         delete from dog
         where name like concat('%',#{string},'%')
@@ -123,4 +134,5 @@
             #{item.id}
         </foreach>
     </delete>
+
 </mapper>

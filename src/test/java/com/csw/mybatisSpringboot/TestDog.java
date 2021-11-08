@@ -31,11 +31,17 @@ public class TestDog {
     private DogCollarService dogCollarService;
     @Autowired
     private UserService userService;
-
-    @Test
-    public void Test() {
+    /*@Autowired
+    private HttpServletRequest request;*/
+   /* @Test
+    public void Test() throws Exception {
         System.out.println("测试成功");
-    }
+
+
+            String username = request.getParameter("username");
+            String userName2 = AesUtil.decrypt(username);//对比
+
+    }*/
 
     @Test
     public void insertDog() {//添加狗mybatis-plus
