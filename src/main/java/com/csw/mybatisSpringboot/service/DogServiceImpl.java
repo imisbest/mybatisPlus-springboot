@@ -15,6 +15,9 @@ import java.util.Map;
 
 @Service
 public class DogServiceImpl implements DogService {
+    private static final String RECORES = "records";
+    private static final String STATUS = "status";
+    private static final String SUCCESS = "success";
     @Autowired
     private DogMapper dogMapper;
 
@@ -62,8 +65,8 @@ public class DogServiceImpl implements DogService {
     public Map<String, Object> selectPage(Page<Dog> page, QueryWrapper<Dog> queryWrapper) {
         Page<Dog> dogPage = dogMapper.selectPage(page, queryWrapper);
         Map<String, Object> map = new HashMap<>();
-        map.put("records", dogPage.getRecords());//数据
-        map.put("status", "success");
+        map.put(RECORES, dogPage.getRecords());//数据
+        map.put(STATUS, SUCCESS);
         return map;
     }
 
@@ -72,8 +75,8 @@ public class DogServiceImpl implements DogService {
     public Map<String, Object> selectpageTables(int currentPage, int pageSize) {
         List<Dog> list = dogMapper.selectpageTables(currentPage, pageSize);
         Map<String, Object> map = new HashMap<>();
-        map.put("records", list);//数据
-        map.put("status", "success");
+        map.put(RECORES, list);//数据
+        map.put(STATUS, SUCCESS);
         return map;
     }
 
@@ -81,8 +84,8 @@ public class DogServiceImpl implements DogService {
     public Map<String, Object> selectTables() {
         List<Dog> list = dogMapper.selectTables();
         Map<String, Object> map = new HashMap<>();
-        map.put("records", list);//数据
-        map.put("status", "success");
+        map.put(RECORES, list);//数据
+        map.put(STATUS, SUCCESS);
         return map;
     }
 
@@ -109,8 +112,8 @@ public class DogServiceImpl implements DogService {
             if (i + 1 <= length) {
                 returnList.add(list.get(i));
             }
-            map0.put("records", returnList);//数据
-            map0.put("status", "success");
+            map0.put(RECORES, returnList);//数据
+            map0.put(STATUS, SUCCESS);
 
         }
         return map0;

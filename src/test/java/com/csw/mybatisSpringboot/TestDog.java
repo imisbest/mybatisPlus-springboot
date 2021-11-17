@@ -11,6 +11,8 @@ import com.csw.mybatisSpringboot.service.DogService;
 import com.csw.mybatisSpringboot.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -23,6 +25,7 @@ import java.util.UUID;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class TestDog {
+    private static final Logger logger = LoggerFactory.getLogger(TestDog.class);
     @Autowired
     private DogService dogService;
     @Autowired
@@ -35,7 +38,7 @@ public class TestDog {
     private HttpServletRequest request;*/
    /* @Test
     public void Test() throws Exception {
-        System.out.println("测试成功");
+        logger.info(""+"测试成功");
 
 
             String username = request.getParameter("username");
@@ -126,7 +129,7 @@ public class TestDog {
     @Test
     public void selectAllDog() {//查询所有狗mybatis-plus
         List<Dog> dogList = dogService.selectAllDog();
-        System.out.println(dogList);
+        logger.info("" + dogList);
     }
 
     @Test
@@ -143,7 +146,7 @@ public class TestDog {
     @Test
     public void selectDogLeashDogs() {
         List<DogLeash> dogList = dogLeashService.selectDogLeashDogs();
-        System.out.println(dogList);
+        logger.info("" + dogList);
     }
 
     /*eq	=	eq(“real_name”,“王昭君”)
@@ -185,8 +188,8 @@ public class TestDog {
         QueryWrapper<Dog> queryWrapper = new QueryWrapper<>();
         Map<String, Object> map = dogService.selectPage(page, queryWrapper);
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
@@ -194,8 +197,8 @@ public class TestDog {
     public void selectTables() {//多表查询(一对多)（需要手动写sql）
         Map<String, Object> map = dogService.selectTables();
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
@@ -206,8 +209,8 @@ public class TestDog {
         int pageSize = 3;
         Map<String, Object> map = dogService.selectpageTables(currentPage, pageSize);
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
@@ -218,7 +221,7 @@ public class TestDog {
         int pageSize = 3;
         Page<Dog> page0 = new Page<>(currentPage, pageSize);
         Page<Dog> dogPage = dogService.selectTablePage(page0);
-        System.out.println(dogPage.getRecords());
+        logger.info("" + dogPage.getRecords());
     }
 
     /*真正的一对多分页，后续的*/
@@ -229,8 +232,8 @@ public class TestDog {
         int pageSize = 3;
         Map<String, Object> map = dogService.selectTablesByLast(currentPage, pageSize);
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
@@ -241,15 +244,15 @@ public class TestDog {
         int pageSize = 3;
         Map<String, Object> map = dogLeashService.selectOneToOneByMybatisPlusPage(currentPage, pageSize);
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
     @Test
     public void uuid() {
         for (int i = 0; i < 10; i++) {
-            System.out.println(UUID.randomUUID().toString().replace("-", ""));
+            logger.info("" + UUID.randomUUID().toString().replace("-", ""));
         }
     }
 
@@ -261,8 +264,8 @@ public class TestDog {
         int pageSize = 1;
         Map<String, Object> map = dogCollarService.selectCollarLeashByLast(currentPage, pageSize);
         for (String obj : map.keySet()) {
-            System.out.println("键：" + obj);
-            System.out.println("键" + map.get(obj));
+            logger.info("" + "键：" + obj);
+            logger.info("" + "键" + map.get(obj));
         }
     }
 
